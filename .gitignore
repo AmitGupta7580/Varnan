@@ -1,0 +1,5 @@
+.env
+dist/
+tests/__pycache__
+vrnan/__pycache__
+inputs/*
