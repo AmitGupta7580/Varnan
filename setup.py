@@ -9,12 +9,12 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="vrnan",
+    name="varnan",
     version="0.1.0",
     description="A CTF-Writeup Tool",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/realpython/reader",
+    url="https://github.com/AmitGupta7580/Varnan",
     author="Amit Gupta",
     author_email="amitgupta758000@gmail.com",
     license="MIT",
@@ -27,7 +27,7 @@ setup(
     install_requires=["typer"],
     entry_points={
         "console_scripts": [
-            "vrnan=vrnan.__main__:main",
+            "varnan=varnan.__main__:main",
         ]
     },
 )

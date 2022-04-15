@@ -1,7 +1,7 @@
 .env
 dist/
 build/
-vrnan.egg-info/
-tests/__pycache__
-vrnan/__pycache__
+varnan.egg-info/
+tests/__pycache__/
+varnan/__pycache__/
 inputs/*

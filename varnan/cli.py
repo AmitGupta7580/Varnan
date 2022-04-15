@@ -2,7 +2,7 @@ from typing import Optional
 
 import typer
 
-from vrnan import __app_name__, __version__
+from varnan import __app_name__, __version__
 
 app = typer.Typer()
 

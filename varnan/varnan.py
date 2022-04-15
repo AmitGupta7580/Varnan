@@ -1,5 +1,5 @@
 import os
 
-class Vrnan:
+class Varnan:
     def __init__(self):
         print("Welcome to Vrnan Tool !!")

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "vrnan"
+name = "varnan"
 version = "0.1.0"
 description = "A CTF-Writeup Tool"
 authors = ["AmitGupta7580 <amitgupta758000@gmail.com>"]

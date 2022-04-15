@@ -1,4 +1,4 @@
-__app_name__ = "vrnan"
+__app_name__ = "varnan"
 __version__ = "0.1.0"
 
 (
