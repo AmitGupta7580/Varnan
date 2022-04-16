@@ -18,20 +18,20 @@
     ```
     varnan link --ctf CTF_LINK --creds USERNAME:PASSWORD
     ```
-3. ### List Catagories
+3. ### List Categories
     List all the present CTF Catagories in the workspace
     ```
-    varnan list catagory
+    varnan list category
     ```
 4. ### List Tasks (Solved / unsolved)
     List all the present CTF Tasks in the workspace
     ```
     varnan list task
     ```
-5. ### Add Catagory
-    Add CTF Catagory in the workspace
+5. ### Add Category
+    Add CTF Category in the workspace
     ```
-    varnan add catagory CATAGORY_NAME
+    varnan add category category_NAME
     ```
 6. ### Add Task
     Add CTF Task in the workspace
