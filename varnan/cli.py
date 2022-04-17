@@ -1,11 +1,14 @@
-import validators
+import os
 
+import validators
 import typer
 from typing import List, Optional
 
 from varnan import __app_name__, __version__, varnan
 from varnan.category import Category
+from varnan.exceptions import ConfigException
 from varnan.task import Task
+
 
 app = typer.Typer()
 list_app = typer.Typer()
@@ -15,9 +18,10 @@ app.add_typer(add_app, name="add", help="Add items in workspace")
 
 tool = None
 
+
 @app.command()
 def init(
-    ctf: Optional[str] = typer.Option(
+    ctf_url: Optional[str] = typer.Option(
         "",
         "--ctf"
     ),
@@ -27,18 +31,30 @@ def init(
     ),
 ) -> None:
     """Initialize Standard/Customized Workspace."""
-    if ctf == "":
-        tool.initialize()
+    global tool
+    if ctf_url == "":
+        try:
+            tool.initialize()
+        except ConfigException:
+            # prompt for user
+            response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
+            if response == 'y':
+                # delete config file
+                os.remove(tool.workspace + '.varnan.config')
+                tool = varnan.Varnan()
+                tool.initialize()
+            else:
+                return
     else:
-        if validators.url(ctf):
-            tool.initialize(ctf=ctf, creds=creds)
+        if validators.url(ctf_url):
+            tool.initialize(ctf_url=ctf_url, creds=creds)
         else:
             print("invalid url")
 
 
 @app.command()
 def link(
-    ctf: str = typer.Option(
+    ctf_url: str = typer.Option(
         "",
         "--ctf",
         prompt="CTF Platform URL for customized workspace",
@@ -51,8 +67,8 @@ def link(
 ) -> None:
     """Link a CTF with currnet working workspace.\n
     Warning : This command will delete all files and clean up the workspace."""
-    if validators.url(ctf):
-        tool.link(ctf, creds)
+    if validators.url(ctf_url):
+        tool.link(ctf_url, creds)
     else:
         print("invalid url")
 

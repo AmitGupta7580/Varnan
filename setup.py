@@ -24,7 +24,7 @@ setup(
     ],
     packages=find_packages(exclude=("tests",)),
     include_package_data=True,
-    install_requires=["typer"],
+    install_requires=["typer", "validators"],
     entry_points={
         "console_scripts": [
             "varnan=varnan.__main__:main",
