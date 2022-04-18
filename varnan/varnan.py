@@ -1,21 +1,23 @@
 import os
-from time import time
+import xml.etree.ElementTree as ET
 
 from varnan.category import Category
 from varnan.exceptions import ConfigException
 from varnan.task import Task
-from varnan.ctf import CTF
+from varnan.ctf import CTF, StandardCTF
 
 class Varnan:
+    global _WORKSPACE, _CONFIG_FILE_PATH
+    _WORKSPACE = os.getcwd() + '\\'
+    _CONFIG_FILE_PATH = _WORKSPACE + '.varnan_config.xml'
+
     def __init__(self):
         '''
         Initialization of Varnan Class
         '''
 
-        self.workspace = os.getcwd() + '\\'
-
         # Workspace Information
-        self.configured = os.path.exists(self.workspace + '.varnan.config')
+        self.configured = os.path.exists(_CONFIG_FILE_PATH)
 
         # fetch configuration of tool from working directory
         if self.configured:
@@ -25,28 +27,32 @@ class Varnan:
     def initialize(self, ctf_url=None, creds=None):
         '''
         Initialize Standard/Customized Workspace
-
-        Standard Workspace -> 
-            Categories : 
-                1. Web
-                2. Crypto
-                3. Misc
-                4. Reversing
         '''
         
         if ctf_url:
-            # extract the categories in the ctf
+            # fetch platform information from ctf_url and get the class for that platform
+            # self.ctf = cls()
+
+            # check the creds on that platform
+
+            # extract the information of the ctf
             # self.categories = []
-            # construct self.ctf from ctf_url
+            
+            # logging message for creating standard worspace
+
             pass
         else:
             if self.configured:
                 raise ConfigException("Workspace Already Exists")
-            self.categories = ["Web", "Crypto", "Misc", "Reversing"]
-            self.ctf = CTF(f"Unnamed_{int(time())}", self.categories)
+            self.ctf = StandardCTF()
 
-        for category in self.categories:
-            os.makedirs(self.workspace + category, exist_ok = True)
+            # logging messgae for creating standard worspace
+
+
+        # logging about categories and about their no. of tasks
+
+        for category in self.ctf.categories:
+            os.makedirs(self.workspace + category.name, exist_ok = True)
 
         # write worspace information to config file
         self.write_config()
@@ -109,11 +115,11 @@ class Varnan:
 
 
     def read_config(self):
-        with open(self.workspace + '.varnan.config', 'r') as config_file:
-            self.ctf = CTF.read_config(config_file.read())
+        config = ET.parse(_CONFIG_FILE_PATH).getroot()
+        platform_cls = exec(config.find('platform').test)
+        self.ctf = platform_cls.read_config(config)
 
 
     def write_config(self):
-        with open(self.workspace + '.varnan.config', 'w') as config_file:
-            config_file.write(self.ctf.convert_to_config())
+        self.ctf.convert_to_tree().write(_CONFIG_FILE_PATH)
 
