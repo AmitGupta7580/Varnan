@@ -1,4 +1,5 @@
 import os
+import time
 
 import validators
 import typer
@@ -6,7 +7,6 @@ from typing import List, Optional
 
 from varnan import __app_name__, __version__, varnan
 from varnan.category import Category
-from varnan.exceptions import ConfigException
 from varnan.task import Task
 
 
@@ -24,6 +24,12 @@ _CONFIG_FILE_PATH = _WORKSPACE + '.varnan_config.xml'
 
 @app.command()
 def init(
+    ctf_name: str = typer.Option(
+        f"Unnamed_{int(time.time())}",
+        "-n",
+        "--name",
+        prompt="Name of the CTF"
+    ),
     ctf_url: Optional[str] = typer.Option(
         "",
         "--ctf"
@@ -33,24 +39,26 @@ def init(
         "--creds"
     ),
 ) -> None:
-    """Initialize Standard/Customized Workspace."""
+    '''
+    Initialize Standard/Customized Workspace.
+    '''
     global tool
+
+    # simple check for the exsistence of config file 
+    if tool.configured:
+        response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
+        if response == 'y':
+            # delete config file
+            os.remove(_CONFIG_FILE_PATH)
+            tool = varnan.Varnan()
+        else:
+            return
+    
     if ctf_url == "":
-        try:
-            tool.initialize()
-        except ConfigException:
-            # prompt for user
-            response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
-            if response == 'y':
-                # delete config file
-                os.remove(_CONFIG_FILE_PATH)
-                tool = varnan.Varnan()
-                tool.initialize()
-            else:
-                return
+        tool.initialize(ctf_name)
     else:
-        if validators.url(ctf_url):
-            tool.initialize(ctf_url=ctf_url, creds=creds)
+        if validators.url(ctf_url): # url validation check
+            tool.initialize(ctf_name, ctf_url=ctf_url, creds=creds)
         else:
             print("invalid url")
 
@@ -68,17 +76,80 @@ def link(
         prompt="Credentials of CTF platform for customized workspace",
     ),
 ) -> None:
-    """Link a CTF with currnet working workspace.\n
-    Warning : This command will delete all files and clean up the workspace."""
-    if validators.url(ctf_url):
+    '''
+    Link a CTF with currnet working workspace.\n
+    Warning : This command will delete all files and clean up the workspace.
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if tool.configured:
+        response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
+        if response == 'y':
+            # delete config file
+            os.remove(_CONFIG_FILE_PATH)
+            tool = varnan.Varnan()
+        else:
+            return
+
+    if validators.url(ctf_url): # url validation check
         tool.link(ctf_url, creds)
     else:
         print("invalid url")
 
 
+@app.command()
+def stats() -> None:
+    '''
+    Show your progress in the CTF
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if tool.configured:
+        response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
+        if response == 'y':
+            # delete config file
+            os.remove(_CONFIG_FILE_PATH)
+            tool = varnan.Varnan()
+        else:
+            return
+
+    tool.show_stats()
+
+
+@app.command()
+def generate() -> None:
+    '''
+    Generate an overall Writeup for whole CTF.
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if tool.configured:
+        response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
+        if response == 'y':
+            # delete config file
+            os.remove(_CONFIG_FILE_PATH)
+            tool = varnan.Varnan()
+        else:
+            return
+
+    tool.generate()
+
+
 @category_app.command('list')
 def list_category() -> None:
-    """List all the present CTF Categories in the workspace."""
+    '''
+    List all the present CTF Categories in the workspace.
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
+
     tool.list_category()
 
 
@@ -86,18 +157,36 @@ def list_category() -> None:
 def add_category(
     name: str = typer.Option(
         "Misc",
-        "-n"
+        "-n",
         "--name",
         prompt="Name of the category",
     )
 ) -> None:
-    """Add CTF Category in the workspace"""
+    '''
+    Add CTF Category in the workspace
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
+
     tool.add_category(Category(name))
 
 
 @task_app.command('list')
 def list_task() -> None:
-    """List all the present CTF Tasks in the workspace."""
+    '''
+    List all the present CTF Tasks in the workspace.
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
+
     tool.list_task()
 
 
@@ -115,29 +204,74 @@ def add_task(
         "--desc",
         prompt="Description of the task",
     ),
-    author: str = typer.Option(
-        "",
-        "-au",
-        "--author",
-        prompt="Author of the task",
+    category_name: str = typer.Option(
+        "Misc",
+        "-c",
+        "--category",
+        prompt="Category of the task"
     ),
-    attatchments: List[str] = typer.Option(
+    attatchments: Optional[List[str]]= typer.Option(
         [],
         "-a",
         "--attach",
-        prompt="Attachment URLs of the task",
+        help="Attachment URLs of the task",
     ),
-    points: int = typer.Option(
+    points: Optional[int] = typer.Option(
         0,
         "-p",
         "--points",
-        prompt="Points of the task",
-    ),
+        help="Points of the task",
+    )
 ) -> None:
-    """Add CTF Task in the workspace"""
+    '''
+    Add CTF Task in the workspace
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
+
     # issue with attachments
-    print(attatchments)
-    tool.add_task(Task(name, description, author, points, attatchments))
+
+    tool.add_task(Task(name, description, points, attatchments), category_name)
+
+
+@task_app.command('solve')
+def add_task(
+    name: str = typer.Option(
+        "Unnamed",
+        "-n",
+        "--name",
+        prompt="Name of the task",
+    ),
+    category_name: str = typer.Option(
+        "",
+        "-c",
+        "--category",
+        prompt="Category of the task"
+    ),
+    flag: str = typer.Option(
+        "",
+        "-f",
+        "--flag",
+        prompt="Description of the task",
+    )
+) -> None:
+    '''
+    Mark CTF Task as solved
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
+
+    # issue with attachments
+
+    tool.solve_task(name, category_name, flag)
 
 
 def _version_callback(value: bool) -> None:

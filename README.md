@@ -18,7 +18,12 @@
     ```
     varnan link --ctf CTF_LINK --creds USERNAME:PASSWORD
     ```
-3. ### List Categories
+3. ### Show Statistics
+    Show Total Points and total solved challanges in the CTF. If it was linked with a real online hosted CTF then it will also display overall rank of yours
+    ```
+    varnan stats
+    ```
+4. ### List Categories
     List all the present CTF Catagories in the workspace
     ```
     varnan category list
@@ -28,19 +33,27 @@
     ```
     varnan category add category_NAME
     ```
-4. ### List Tasks (Solved / unsolved)
+6. ### List Tasks (Solved / unsolved)
     List all the present CTF Tasks in the workspace
     ```
     varnan task list
     ```
-6. ### Add Task
+7. ### Add Task
     Add CTF Task in the workspace
     ```
     varnan task add --name TASK_NAME --desc DESCRIPTION --points POINTS --author AUTHOR --attatchments ATTATCHMENT_LINK
     ```
-7. ### Generate complete CTF README
+8. ### Solve Task
+    Mark CTF Task as solved
+    ```
+    varnan task solve --category CATEGORY --name TASK_NAME --flag FLAG
+    ```
+9. ### Generate complete CTF README
     Parse over all catagories and task to generate a final README file for whole CTF with proper formatting of solution and challange description.
-8. ### Push Writeup to Github
+    ```
+    varnan generate
+    ```
+10. ### Push Writeup to Github
     Push the complete Workspace to Github.
-9. ### Push Writeup README to Github
+11. ### Push Writeup README to Github
     Push Final README of CTF to Github.
