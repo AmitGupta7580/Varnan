@@ -17,6 +17,8 @@ add_app = typer.Typer()
 app.add_typer(add_app, name="add", help="Add items in workspace")
 
 tool = None
+_WORKSPACE = os.getcwd() + '\\'
+_CONFIG_FILE_PATH = _WORKSPACE + '.varnan_config.xml'
 
 
 @app.command()
@@ -40,7 +42,7 @@ def init(
             response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
             if response == 'y':
                 # delete config file
-                os.remove(tool.workspace + '.varnan.config')
+                os.remove(_CONFIG_FILE_PATH)
                 tool = varnan.Varnan()
                 tool.initialize()
             else:

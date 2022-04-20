@@ -1,10 +1,8 @@
 import os
 import xml.etree.ElementTree as ET
 
-from varnan.category import Category
 from varnan.exceptions import ConfigException
-from varnan.task import Task
-from varnan.ctf import CTF, StandardCTF
+from varnan.ctf import StandardCTF
 
 class Varnan:
     global _WORKSPACE, _CONFIG_FILE_PATH
@@ -28,7 +26,6 @@ class Varnan:
         '''
         Initialize Standard/Customized Workspace
         '''
-        
         if ctf_url:
             # fetch platform information from ctf_url and get the class for that platform
             # self.ctf = cls()
@@ -52,9 +49,10 @@ class Varnan:
         # logging about categories and about their no. of tasks
 
         for category in self.ctf.categories:
-            os.makedirs(self.workspace + category.name, exist_ok = True)
+            os.makedirs(_WORKSPACE + category.name, exist_ok = True)
 
         # write worspace information to config file
+        print(list(self.ctf.categories))
         self.write_config()
 
 
@@ -116,8 +114,8 @@ class Varnan:
 
     def read_config(self):
         config = ET.parse(_CONFIG_FILE_PATH).getroot()
-        platform_cls = exec(config.find('platform').test)
-        self.ctf = platform_cls.read_config(config)
+        platform_cls = globals()[config.find('platform').text]
+        return platform_cls.read_config(config)
 
 
     def write_config(self):
