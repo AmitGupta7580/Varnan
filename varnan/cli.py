@@ -11,10 +11,11 @@ from varnan.task import Task
 
 
 app = typer.Typer()
-list_app = typer.Typer()
-app.add_typer(list_app, name="list", help="List the items of workspace")
-add_app = typer.Typer()
-app.add_typer(add_app, name="add", help="Add items in workspace")
+task_app = typer.Typer()
+app.add_typer(task_app, name="task", help="Tasks commands")
+category_app = typer.Typer()
+app.add_typer(category_app, name="category", help="Category commands")
+
 
 tool = None
 _WORKSPACE = os.getcwd() + '\\'
@@ -75,19 +76,13 @@ def link(
         print("invalid url")
 
 
-@list_app.command('category')
+@category_app.command('list')
 def list_category() -> None:
     """List all the present CTF Categories in the workspace."""
     tool.list_category()
 
 
-@list_app.command('task')
-def list_task() -> None:
-    """List all the present CTF Tasks in the workspace."""
-    tool.list_task()
-
-
-@add_app.command('category')
+@category_app.command('add')
 def add_category(
     name: str = typer.Option(
         "Misc",
@@ -100,7 +95,13 @@ def add_category(
     tool.add_category(Category(name))
 
 
-@add_app.command('task')
+@task_app.command('list')
+def list_task() -> None:
+    """List all the present CTF Tasks in the workspace."""
+    tool.list_task()
+
+
+@task_app.command('add')
 def add_task(
     name: str = typer.Option(
         "Unnamed",

@@ -21,22 +21,22 @@
 3. ### List Categories
     List all the present CTF Catagories in the workspace
     ```
-    varnan list category
-    ```
-4. ### List Tasks (Solved / unsolved)
-    List all the present CTF Tasks in the workspace
-    ```
-    varnan list task
+    varnan category list
     ```
 5. ### Add Category
     Add CTF Category in the workspace
     ```
-    varnan add category category_NAME
+    varnan category add category_NAME
+    ```
+4. ### List Tasks (Solved / unsolved)
+    List all the present CTF Tasks in the workspace
+    ```
+    varnan task list
     ```
 6. ### Add Task
     Add CTF Task in the workspace
     ```
-    varnan add task --name TASK_NAME --desc DESCRIPTION --points POINTS --author AUTHOR --attatchments ATTATCHMENT_LINK
+    varnan task add --name TASK_NAME --desc DESCRIPTION --points POINTS --author AUTHOR --attatchments ATTATCHMENT_LINK
     ```
 7. ### Generate complete CTF README
     Parse over all catagories and task to generate a final README file for whole CTF with proper formatting of solution and challange description.
