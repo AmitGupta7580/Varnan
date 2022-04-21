@@ -23,6 +23,11 @@ _CONFIG_FILE_PATH = _WORKSPACE + '.varnan_config.xml'
 
 
 @app.command()
+def test() -> None:
+    tool.update_workspace()
+
+
+@app.command()
 def init(
     ctf_name: str = typer.Option(
         f"Unnamed_{int(time.time())}",
@@ -60,7 +65,13 @@ def init(
         if validators.url(ctf_url): # url validation check
             tool.initialize(ctf_name, ctf_url=ctf_url, creds=creds)
         else:
-            print("invalid url")
+            print("[-] Invalid url")
+            return
+
+    tool.update_workspace()
+
+    # write worspace information to config file
+    tool.write_config()
 
 
 @app.command()
@@ -95,7 +106,10 @@ def link(
     if validators.url(ctf_url): # url validation check
         tool.link(ctf_url, creds)
     else:
-        print("invalid url")
+        print("[-] Invalid url")
+        return
+
+    tool.write_config()
 
 
 @app.command()
@@ -106,14 +120,9 @@ def stats() -> None:
     global tool
 
     # simple check for the exsistence of config file 
-    if tool.configured:
-        response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
-        if response == 'y':
-            # delete config file
-            os.remove(_CONFIG_FILE_PATH)
-            tool = varnan.Varnan()
-        else:
-            return
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
 
     tool.show_stats()
 
@@ -126,14 +135,9 @@ def generate() -> None:
     global tool
 
     # simple check for the exsistence of config file 
-    if tool.configured:
-        response = typer.prompt("This action will delete your current progreess in the the CTF [y/n]")
-        if response == 'y':
-            # delete config file
-            os.remove(_CONFIG_FILE_PATH)
-            tool = varnan.Varnan()
-        else:
-            return
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
 
     tool.generate()
 
@@ -155,10 +159,10 @@ def list_category() -> None:
 
 @category_app.command('add')
 def add_category(
-    name: str = typer.Option(
+    category_name: str = typer.Option(
         "Misc",
-        "-n",
-        "--name",
+        "-c",
+        "--category",
         prompt="Name of the category",
     )
 ) -> None:
@@ -172,7 +176,35 @@ def add_category(
         print("First initialize your workspace.")
         return
 
-    tool.add_category(Category(name))
+    tool.add_category(Category(category_name))
+
+    tool.update_workspace()
+    tool.write_config()
+
+
+@category_app.command('remove')
+def remove_category(
+    category_name: str = typer.Option(
+        "",
+        "-c",
+        "--category",
+        prompt="Name of the category",
+    )
+) -> None:
+    '''
+    Remove CTF Category in the workspace
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
+
+    tool.remove_category(Category(category_name))
+
+    tool.update_workspace()
+    tool.write_config()
 
 
 @task_app.command('list')
@@ -192,10 +224,10 @@ def list_task() -> None:
 
 @task_app.command('add')
 def add_task(
-    name: str = typer.Option(
+    task_name: str = typer.Option(
         "Unnamed",
-        "-n",
-        "--name",
+        "-tn",
+        "--task-name",
         prompt="Name of the task",
     ),
     description: str = typer.Option(
@@ -235,15 +267,49 @@ def add_task(
 
     # issue with attachments
 
-    tool.add_task(Task(name, description, points, attatchments), category_name)
+    tool.add_task(Task(task_name, description, points, attatchments), category_name)
+
+    tool.update_workspace()
+    tool.write_config()
+
+
+@task_app.command('remove')
+def remove_task(
+    task_name: str = typer.Option(
+        '',
+        '-tn',
+        '--task-name',
+        prompt="Name of the Task"
+    ),
+    category_name: str = typer.Option(
+        '',
+        '-c',
+        '--category',
+        prompt="Category of the task"
+    )
+) -> None:
+    '''
+    Remove CTF Task in the workspace.
+    '''
+    global tool
+
+    # simple check for the exsistence of config file 
+    if not tool.configured:
+        print("First initialize your workspace.")
+        return
+
+    tool.remove_task(task_name, category_name)
+
+    tool.update_workspace()
+    tool.write_config()
 
 
 @task_app.command('solve')
-def add_task(
-    name: str = typer.Option(
+def solve_task(
+    task_name: str = typer.Option(
         "Unnamed",
-        "-n",
-        "--name",
+        "-tn",
+        "--task-name",
         prompt="Name of the task",
     ),
     category_name: str = typer.Option(
@@ -271,7 +337,8 @@ def add_task(
 
     # issue with attachments
 
-    tool.solve_task(name, category_name, flag)
+    tool.solve_task(task_name, category_name, flag)
+    tool.write_config()
 
 
 def _version_callback(value: bool) -> None:
@@ -293,4 +360,10 @@ def main(
 ) -> None:
     global tool
     tool = varnan.Varnan()
+    
+    # fetch configuration of tool from working directory
+    if os.path.exists(_CONFIG_FILE_PATH):
+        tool.ctf = tool.read_config()
+        tool.configured = True
+        
     return
