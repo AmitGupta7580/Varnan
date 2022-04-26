@@ -1,0 +1,40 @@
+<varnan_config>
+    <platform>StandardCTF</platform>
+    <name>Demo-CTF</name>
+    <category>
+        <name>Web</name>
+        <task>
+            <name>Web task 1</name>
+            <description>No use web technology</description>
+            <solved>True</solved>
+            <points>300</points>
+        </task>
+    </category>
+    <category>
+        <name>Crypto</name>
+        <task>
+            <name>Crypto task 1</name>
+            <description>Random Description</description>
+            <solved>False</solved>
+            <points>350</points>
+        </task>
+        <task>
+            <name>Crypto task 2</name>
+            <description>Description</description>
+            <solved>False</solved>
+            <points>200</points>
+        </task>
+    </category>
+    <category>
+        <name>Misc</name>
+    </category>
+    <category>
+        <name>Reversing</name>
+        <task>
+            <name>Rev task 1</name>
+            <description>Description</description>
+            <solved>True</solved>
+            <points>450</points>
+        </task>
+    </category>
+</varnan_config>
