@@ -1,5 +1,7 @@
 class Task:
-    def __init__(self, name, description, points = 0, attachments = [], solved = False, flag = None):
+    def __init__(
+        self, name, description, points=0, attachments=[], solved=False, flag=None
+    ):
         self.name = name
         self.description = description
         self.points = points

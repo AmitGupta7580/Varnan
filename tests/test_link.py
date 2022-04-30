@@ -4,5 +4,6 @@ from varnan.varnan import Varnan
 
 runner = CliRunner()
 
-def test_link():
+
+def test_link_ctf():
     pass
