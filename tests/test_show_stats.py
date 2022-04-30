@@ -16,7 +16,7 @@ def test_show_stats():
     tool.ctf = platform_cls.read_config(config)
 
     # adding test category and task to the ctf class
-    solved_tasks, tasks_cnt, points =  tool.show_stats()
+    solved_tasks, tasks_cnt, points = tool.show_stats()
 
     assert solved_tasks == 2
     assert tasks_cnt == 4

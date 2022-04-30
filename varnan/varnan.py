@@ -87,7 +87,7 @@ class Varnan:
                 print("[-] Category already Exists")
                 print("[!] First delete the category to recreate it.")
                 return False
-                
+
         self.ctf.categories.append(category)
         return True
 

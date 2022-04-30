@@ -39,6 +39,6 @@ def test_remove_category():
 
     # removing last indexed category
     test_category = tool.ctf.categories[-1]
-    
+
     assert tool.remove_category(test_category)
     assert len(tool.ctf.categories) == 3
