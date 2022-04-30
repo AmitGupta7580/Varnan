@@ -16,7 +16,7 @@ def test_add_category():
     tool.ctf = platform_cls.read_config(config)
 
     # adding test category and task to the ctf class
-    tool.add_category(
+    assert tool.add_category(
         Category(
             "Test Category",
             [
@@ -26,6 +26,19 @@ def test_add_category():
         )
     )
 
+    assert len(tool.ctf.categories) == 5
+    assert tool.ctf.categories[-1].name == "Test Category"
+    assert len(tool.ctf.categories[-1].tasks) == 2
+
 
 def test_remove_category():
-    pass
+    config = ET.parse(os.path.join(ROOT_DIR, "tests/data", "test_config.xml")).getroot()
+    platform_cls = globals()[config.find("platform").text]
+    tool = Varnan()
+    tool.ctf = platform_cls.read_config(config)
+
+    # removing last indexed category
+    test_category = tool.ctf.categories[-1]
+    
+    assert tool.remove_category(test_category)
+    assert len(tool.ctf.categories) == 3

@@ -66,6 +66,10 @@ class Varnan:
             f"Total Solved Tasks : [{total_solved_tasks}/{total_tasks_cnt}]\nTotal Points : {total_points}"
         )
 
+        # TODO : CTF rank on linked ctf
+
+        return total_solved_tasks, total_tasks_cnt, total_points
+
     def list_category(self):
         """
         List all the present CTF Categories in the workspace
@@ -82,22 +86,22 @@ class Varnan:
             if cat.name == category.name:
                 print("[-] Category already Exists")
                 print("[!] First delete the category to recreate it.")
-                return
+                return False
+                
         self.ctf.categories.append(category)
+        return True
 
     def remove_category(self, category):
         """
         Remove CTF Category in the workspace
         """
-        category_found = False
         for idx, cat in enumerate(self.ctf.categories):
             if cat.name == category.name:
-                category_found = True
                 self.ctf.categories.pop(idx)
-                break
+                return True
 
-        if not category_found:
-            print("[-] No such category found")
+        print("[-] No such category found")
+        return False
 
     def list_task(self):
         """
