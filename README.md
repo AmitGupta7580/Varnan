@@ -1,8 +1,23 @@
 # Varnan
 
-> A CTF-writeup tool
+[![Latest Version][mdversion-button]][md-pypi]
+[![Python Versions][pyversion-button]][md-pypi]
+[![MIT License][mitlicense-button]][mitlicense]
 
-## Features
+[build-button]: https://github.com/Python-Markdown/markdown/workflows/CI/badge.svg?event=push
+[build]: https://github.com/Python-Markdown/markdown/actions?query=workflow%3ACI+event%3Apush
+[codecov-button]: https://codecov.io/gh/Python-Markdown/markdown/branch/master/graph/badge.svg
+[mdversion-button]: https://img.shields.io/badge/pypi-v3.3.6-orange
+[md-pypi]: https://pypi.org/project/Markdown/
+[pyversion-button]: https://img.shields.io/pypi/pyversions/Markdown.svg
+[mitlicense-button]: https://img.shields.io/badge/license-MIT-yellow
+[mitlicense]: https://opensource.org/licenses/MIT
+
+A CTF-writeup tool
+
+## Documentation
+
+### <b>Commands</b>
 
 1. ### Initilaize CTF Workspace <br>
     Initialize Standard Workspace
