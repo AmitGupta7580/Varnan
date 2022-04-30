@@ -78,6 +78,8 @@ class Varnan:
         for category in self.ctf.categories:
             print(f"  |- {category.name}")
 
+        return self.ctf.categories
+
     def add_category(self, category):
         """
         Add CTF Category in the workspace
@@ -108,6 +110,8 @@ class Varnan:
         List all the present CTF Tasks in the workspace.
         """
         tasks_cnt, solved_tasks_cnt = 0, 0
+        tasks = []
+
         print("[+] Tasks : ")
         for category in self.ctf.categories:
             print(f"  |- {category.name}")
@@ -117,69 +121,57 @@ class Varnan:
                 tasks_cnt += 1
                 solved_tasks_cnt += 1 if task.solved else 0
                 print(f"     |- {task.name}")
+                tasks.append(task)
+
+        return solved_tasks_cnt, tasks
 
     def add_task(self, task, category_name):
         """
         Add CTF Task in the workspace
         """
-        category_exists = False
         for idx, category in enumerate(self.ctf.categories):
             if category.name == category_name:
-                category_exists = True
                 self.ctf.categories[idx].tasks.append(task)
-                break
+                return True
 
-        if not category_exists:
-            # create category and add task into that
-            self.ctf.categories.append(Category(category_name, tasks=[task]))
+        # create category and add task into that
+        self.ctf.categories.append(Category(category_name, tasks=[task]))
+        return True
 
     def remove_task(self, category_name, task_name):
         """
         Remove CTF Task in the workspace
         """
-        category_found = False
-
         for idx, category in enumerate(self.ctf.categories):
             if category.name == category_name:
-                category_found = True
-                task_found = False
-
                 for idxx, task in enumerate(category.tasks):
                     if task.name == task_name:
-                        task_found = True
                         self.ctf.categories[idx].tasks.pop(idxx)
-                        break
+                        return True
 
-                if not task_found:
-                    print(f"[-] No such task found in {category.name} category")
-                    break
+                print(f"[-] No such task found in {category.name} category")
+                return False
 
-        if not category_found:
-            print("[-] No such category found")
-
-        self.write_config()
+        print("[-] No such category found")
+        return False
 
     def solve_task(self, task_name, category_name, flag):
         """
         Mark a Task as solved
         """
-        category_found = False
-
         for idx, category in enumerate(self.ctf.categories):
             if category.name == category_name:
-                category_found = True
-                task_found = False
-
                 for idxx, task in enumerate(category.tasks):
                     if task.name == task_name:
-                        task_found = True
                         self.ctf.categories[idx].tasks[idxx].solved = True
+                        self.ctf.categories[idx].tasks[idxx].flag = flag
+                        return True
 
-                if not task_found:
-                    print(f"[-] No such task found in {category.name} category")
+                print(f"[-] No such task found in {category.name} category")
+                return False
 
-        if not category_found:
-            print("[-] No such category found")
+        print("[-] No such category found")
+        return False
 
     def generate(self):
         """ """

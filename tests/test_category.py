@@ -9,6 +9,18 @@ runner = CliRunner()
 ROOT_DIR = os.getcwd()
 
 
+def test_list_category():
+    config = ET.parse(os.path.join(ROOT_DIR, "tests/data", "test_config.xml")).getroot()
+    platform_cls = globals()[config.find("platform").text]
+    tool = Varnan()
+    tool.ctf = platform_cls.read_config(config)
+
+    # adding test category and task to the ctf class
+    categories = tool.list_category()
+
+    assert tool.ctf.categories == categories
+
+
 def test_add_category():
     config = ET.parse(os.path.join(ROOT_DIR, "tests/data", "test_config.xml")).getroot()
     platform_cls = globals()[config.find("platform").text]
