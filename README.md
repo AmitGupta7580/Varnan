@@ -1,5 +1,6 @@
 # Varnan
 
+[![Python package](https://github.com/AmitGupta7580/Varnan/actions/workflows/python-package.yml/badge.svg)](https://github.com/AmitGupta7580/Varnan/actions/workflows/python-package.yml)
 [![Latest Version][mdversion-button]][md-pypi]
 [![Python Versions][pyversion-button]][md-pypi]
 [![MIT License][mitlicense-button]][mitlicense]
