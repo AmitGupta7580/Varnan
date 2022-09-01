@@ -8,8 +8,8 @@ from varnan.ctf import StandardCTF
 
 class Varnan:
     global _WORKSPACE, _CONFIG_FILE_PATH
-    _WORKSPACE = os.getcwd() + "\\"
-    _CONFIG_FILE_PATH = _WORKSPACE + ".varnan_config.xml"
+    _WORKSPACE = os.getcwd()
+    _CONFIG_FILE_PATH = os.path.join(_WORKSPACE, ".varnan_config.xml")
 
     def __init__(self):
         """
@@ -200,9 +200,9 @@ class Varnan:
         ]
 
         for category in self.ctf.categories:
-            if not os.path.exists(_WORKSPACE + category.name):
+            if not os.path.exists(os.path.join(_WORKSPACE, category.name)):
                 # create category directory
-                os.makedirs(_WORKSPACE + category.name, exist_ok=True)
+                os.makedirs(os.path.join(_WORKSPACE, category.name), exist_ok=True)
                 print(f"[+] {category.name} category is successfully added")
             else:
                 all_categories.remove(category.name)

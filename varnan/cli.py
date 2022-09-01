@@ -18,8 +18,8 @@ app.add_typer(category_app, name="category", help="Category commands")
 
 
 tool = None
-_WORKSPACE = os.getcwd() + "\\"
-_CONFIG_FILE_PATH = _WORKSPACE + ".varnan_config.xml"
+_WORKSPACE = os.getcwd()
+_CONFIG_FILE_PATH = os.path.join(_WORKSPACE, ".varnan_config.xml")
 
 
 @app.command()
